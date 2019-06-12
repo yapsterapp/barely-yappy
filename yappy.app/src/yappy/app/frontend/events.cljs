@@ -32,6 +32,11 @@
        [::rx-message content])
       (recur (<! ws)))))
 
+(defn tx-message
+  [ws msg]
+  (go (let [r (>! ws msg)]
+        (js/console.log "tx-message" msg r))))
+
 (defonce user-websocket (atom nil))
 
 (re-frame/reg-fx

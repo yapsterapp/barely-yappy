@@ -13,8 +13,9 @@
                         {:port 7500}}}}
 
  :ig.system/base
- {:yappy.app.core/websockets {}
-  :yappy.app.core/send {}
+ {:yappy.app.core/usermsg-bus {}
+  :yappy.app.core/websockets {:usermsg-bus #ig/ref :yappy.app.core/usermsg-bus }
+  :yappy.app.core/send {:usermsg-bus #ig/ref :yappy.app.core/usermsg-bus }
   [:edge.yada.ig/classpath-name :yappy.app/index] {:name "index.html"}
   [:edge.yada.ig/resources :yappy.app/assets] {:path "public"}
   :edge.yada.ig/listener {:handler #ig/ref :edge.bidi.ig/vhost

@@ -23,25 +23,26 @@
       (error e "failure parsing client variant" s)
       nil)))
 
-(defonce usermsg-bus (bus/event-bus))
+(defmethod ig/init-key ::usermsg-bus
+  [_ _]
+  (bus/event-bus))
 
 (defn up-consumer
   [v]
   (info "up-consumer" v))
 
 (defmethod ig/init-key ::websockets
-  [_ x]
+  [_ {usermsg-bus :usermsg-bus}]
   (fn [{{user-id :user-id} :params
         :as req}]
-    (info ::websockets user-id)
-    (ddo [ws (http/websocket-connection req)
-          :let [ws-up (stream/map json-variant-> ws)]]
-      (stream/consume up-consumer ws-up)
+    (warn ::websockets user-id)
+    (ddo [ws (http/websocket-connection req)]
+      (stream/consume up-consumer ws)
       (stream/connect (bus/subscribe usermsg-bus user-id)
                       ws))))
 
 (defmethod ig/init-key ::send
-  [_ x]
+  [_ {usermsg-bus :usermsg-bus}]
   (yada/resource
    {:id ::send
     :methods
