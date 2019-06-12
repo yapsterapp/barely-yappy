@@ -10,7 +10,14 @@
 
   org.clojure/tools.logging {:mvn/version "0.5.0-alpha"}
 
-  employeerepublic/promisespromises {:mvn/version "2.5.0.1"}}
+  employeerepublic/promisespromises {:mvn/version "2.5.0.1"
+                                     :exclusions [org.clojure/tools.logging
+                                                  org.slf4j/slf4j-api
+                                                  employeerepublic/slf4j-timbre
+                                                  org.slf4j/jcl-over-slf4j
+                                                  org.slf4j/log4j-over-slf4j
+                                                  org.slf4j/jul-to-slf4j
+                                                  ]}}
 
  :aliases
  {:dev

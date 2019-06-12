@@ -13,7 +13,8 @@
                         {:port 7500}}}}
 
  :ig.system/base
- {:yappy.app.core/string "Hello, app!"
+ {:yappy.app.core/websockets {}
+  :yappy.app.core/send {}
   [:edge.yada.ig/classpath-name :yappy.app/index] {:name "index.html"}
   [:edge.yada.ig/resources :yappy.app/assets] {:path "public"}
   :edge.yada.ig/listener {:handler #ig/ref :edge.bidi.ig/vhost
@@ -21,7 +22,8 @@
   :edge.bidi.ig/vhost [["http://localhost:2200"
                         [""
                          [["/" #ig/ref [:yappy.app/index :edge.yada.ig/classpath-name]]
-                          ["/hello" #ig/ref :yappy.app.core/string]
+                          [["/websockets/" :user-id] #ig/ref :yappy.app.core/websockets]
+                          [["/send/" :from-user-id "/" :to-user-id] #ig/ref :yappy.app.core/send]
                           ["" #ig/ref [:yappy.app/assets :edge.yada.ig/resources]]]]]]}
 
  :ig.system/dev
