@@ -1,0 +1,32 @@
+{:edge.kick/config
+ {:kick.builder/target #profile {:dev "target/dev"
+                                 :prod "target/prod"}
+  :kick/figwheel-main {:builds [{:id "app"
+                                 :main yappy.app.frontend.main
+                                 :output-to "public/frontend.js"
+                                 :output-dir "public/frontend.out"
+                                 :asset-path "/frontend.out"
+                                 :optimizations #profile {:dev :none
+                                                          :prod :advanced}}]
+                       :figwheel-config
+                       {:ring-server-options
+                        {:port 7500}}}}
+
+ :ig.system/base
+ {:yappy.app.core/string "Hello, app!"
+  [:edge.yada.ig/classpath-name :yappy.app/index] {:name "index.html"}
+  [:edge.yada.ig/resources :yappy.app/assets] {:path "public"}
+  :edge.yada.ig/listener {:handler #ig/ref :edge.bidi.ig/vhost
+                          :port 2200}
+  :edge.bidi.ig/vhost [["http://localhost:2200"
+                        [""
+                         [["/" #ig/ref [:yappy.app/index :edge.yada.ig/classpath-name]]
+                          ["/hello" #ig/ref :yappy.app.core/string]
+                          ["" #ig/ref [:yappy.app/assets :edge.yada.ig/resources]]]]]]}
+
+ :ig.system/dev
+ {:edge.kick/builder #ref [:edge.kick/config]}
+
+ :ig/system #profile {:dev #merge [#ref [:ig.system/base]
+                                   #ref [:ig.system/dev]]
+                      :default #ref [:ig.system/base]}}
